@@ -5,6 +5,6 @@ If you use this code, plase cite [cite]
 
 # Contents
 * MultidimensionalQFT.py  
-  * Codes for DFT, FFT, QFT and visualization with brief manual 
+  * Codes for DFT, FFT, QFT and visualization 
 * Reproduce_figures.ipynb
   * Executable codes for reproducing the results
