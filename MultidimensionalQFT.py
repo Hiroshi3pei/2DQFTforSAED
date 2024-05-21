@@ -88,7 +88,7 @@ class FTManager():
     def __init__(self):
         self.clear_circuit()
 
-    def __call__(self,XFTinput_list:list[np.ndarray],save_path=None)->list[np.ndarray]: # 2D-DFT, FFT, QFT            まだ
+    def __call__(self,XFTinput_list:list[np.ndarray],save_path=None)->list[np.ndarray]: # 2D-DFT, FFT, QFT
         DFTinput,FFTinput,QFTinput = XFTinput_list
         DFT_F                      = self.DFT_2D(DFTinput)
         FFT_F                      = self.FFT_2D(FFTinput)
