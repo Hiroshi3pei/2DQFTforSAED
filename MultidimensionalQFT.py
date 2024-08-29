@@ -88,14 +88,14 @@ class FTManager():
     def __init__(self):
         self.clear_circuit()
 
-    def __call__(self,XFTinput_list:list[np.ndarray],save_path=None)->list[np.ndarray]: # 2D-DFT, FFT, QFT
+    def __call__(self,XFTinput_list:list[np.ndarray],save_path=None,fig_name=None)->list[np.ndarray]: # 2D-DFT, FFT, QFT            
         DFTinput,FFTinput,QFTinput = XFTinput_list
         DFT_F                      = self.DFT_2D(DFTinput)
         FFT_F                      = self.FFT_2D(FFTinput)
         Qubits, bit_division       = self.makeQubit(QFTinput)
         QFT_F_state                = self.NDQFT_qulacs(Qubits,bit_division)
         QFT_F                      = self.rearrange_QFT_results_qulacs(QFT_F_state,bit_division)
-        self.draw_heatmap(DFT_F,FFT_F,QFT_F,save_path)
+        self.draw_heatmap(DFT_F,FFT_F,QFT_F,save_path,fig_name)
         return [DFT_F,FFT_F,QFT_F]
 
     def clear_circuit(self):
@@ -203,7 +203,7 @@ class FTManager():
         return state
     
     # create figures
-    def draw_heatmap(self, DFT_F:np.ndarray, FFT_F:np.ndarray, QFT_F:np.ndarray, save_path:str)->None:
+    def draw_heatmap(self, DFT_F:np.ndarray, FFT_F:np.ndarray, QFT_F:np.ndarray, save_path:str, fig_name:str)->None:
         fontsize = 20
         for name,spectrum in zip(["DFT","FFT","QFT"],[DFT_F,FFT_F,QFT_F]):
             fig, ax = plt.subplots()
@@ -213,9 +213,9 @@ class FTManager():
             plt.yticks([0, len(spectrum[1])-1], [str(0), str(len(spectrum[1])-1)])
             image   = ax.imshow(np.abs(spectrum).T, origin='lower', cmap="viridis")
             xs, ys  = np.meshgrid(range(spectrum.real.shape[0]),range(spectrum.real.shape[1]),indexing='ij')
-            # if you show the data value, delete next and the next head "#" and change fontsize  
+            #if you show the data value, delete next and the next head "#" and change fontsize  
             #for x,y,val in zip(xs.reshape(-1), ys.reshape(-1), np.abs(spectrum).reshape(-1)):
-                #ax.text(x,y,'{0:.2f}'.format(val), horizontalalignment='center',verticalalignment='center',fontsize=4, path_effects=[patheffects.withStroke(linewidth=2.5, foreground='white', capstyle="round")])
+                #ax.text(x,y,'{0:.2f}'.format(val), horizontalalignment='center',verticalalignment='center',fontsize=8, path_effects=[patheffects.withStroke(linewidth=2.5, foreground='white', capstyle="round")])
             divider = make_axes_locatable(ax)
             cax     = divider.append_axes("right",size="5%",pad=0.1)
             cbar    = plt.colorbar(image, cax=cax)
@@ -227,7 +227,7 @@ class FTManager():
             ax.xaxis.set_major_locator(MaxNLocator(integer=True))
             ax.yaxis.set_major_locator(MaxNLocator(integer=True))
             if save_path is not None:
-                plt.savefig(save_path+f"/{name}.svg",bbox_inches='tight')
+                plt.savefig(save_path+f"/{fig_name}_{name}.svg",transparent = True,bbox_inches='tight')
             else:
                 plt.show()
             plt.clf()
